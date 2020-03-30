@@ -15,17 +15,17 @@ class GpsNeo6():
         """
 
     
-    def __init__(self,port,debit=9600,diff=1):
+    def __init__(self,port,debit=9600,diff=0):
         """
             on initialise les variables a partir de:
             port: port com
-            debit: vitesse en bauds
-            diff: differece heure local et utc
+            debit: velocity en bauds
+            diff: differece hour local et utc
             """
         self.port=serial.Serial(port,debit)
-        self.diff=diff
+        self.diff=0
         self.tabCode=["GPVTG","GPGGA","GPGSA","GPGLL","GPRMC","GPGSV"]
-        self.vitesse=""
+        self.velocity= ""
         self.latitude=""
         self.longitude=""
         self.latitudeDeg=""
@@ -46,10 +46,10 @@ class GpsNeo6():
         """
             on affiche les info
             """
-        rep="heure: "+str(self.time)+"\rlatitude: "+str(self.latitude) \
-            +"\rlongitude: "+str(self.longitude)+"\rvitesse: "+str(self.vitesse)+" km/h" \
-            +"\raltitude: "+str(self.altitude)+" metre(s)"+"\rprecision: "+str(self.precision)+" metre(s)" \
-            +"\rNombre de satelites vue: "+str(self.satellite)
+        rep="UTC: " + str(self.time) +"\rlatitude: " + str(self.latitude) \
+            +"\rlongitude: " + str(self.longitude) +"\rvelocity: " + str(self.velocity) + " km/h" \
+            +"\raltitude: " + str(self.altitude) + " metre(s)" + "\rprecision: " + str(self.precision) + " metre(s)" \
+            + "\rNumber of detected satellites " + str(self.satellite)
         if geo:
             rep+="\rlieu : "+self.geolocation()
         return rep
@@ -108,14 +108,14 @@ class GpsNeo6():
         self.longitudeDeg=float(data[4])/100#+data[5]
         self.altitude=data[9]
         self.precision=data[6]
-        self.vitesse=self.traiteGPVTG(donnees["GPVTG"]) #recupere que la vitesse de deplacement
+        self.velocity=self.traiteGPVTG(donnees["GPVTG"]) #recupere que la velocity de deplacement
         self.satellite=int(donnees["GPGSV"][0].split(',')[3]) #recupere le nombre de satellite vue
         
         
         
     def traiteGPVTG(self,data):
         """
-            on traite les donnees pour la vitesse
+            on traite les donnees pour la velocity
             """
         data=data.split(',')
         return data[7]
@@ -135,8 +135,8 @@ class GpsNeo6():
     
     
 if __name__=="__main__":
-    #on definit le port la vitesse et la diferrence d'heure utc et locale
-    gps=GpsNeo6(port="com5",debit=9600,diff=2)
+    #on definit le port la velocity et la diferrence d'heure utc et locale
+    gps=GpsNeo6(port="com5",debit=9600,diff=0)
     
     while True:
         #on appel un traitement gps
